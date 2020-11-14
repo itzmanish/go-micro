@@ -278,7 +278,15 @@ func (g *grpcClient) stream(ctx context.Context, node *registry.Node, req client
 		},
 		stream: st,
 		conn:   cc,
-		cancel: cancel,
+		close: func(err error) {
+			// cancel the context if an error occured
+			if err != nil {
+				cancel()
+			}
+
+			// defer execution of release
+			cc.Close()
+		},
 	}
 
 	// set the stream as the response
