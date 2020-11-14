@@ -7,10 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/micro/go-micro/v2/broker"
-	"github.com/micro/go-micro/v2/codec/json"
-	"github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/registry"
+	"github.com/itzmanish/go-micro/v2/broker"
+	"github.com/itzmanish/go-micro/v2/codec/json"
+	"github.com/itzmanish/go-micro/v2/logger"
+	"github.com/itzmanish/go-micro/v2/registry"
 	nats "github.com/nats-io/nats.go"
 )
 

@@ -14,6 +14,13 @@ var (
 	ErrWatcherStopped = errors.New("watcher stopped")
 )
 
+const (
+	// WildcardDomain indicates any domain
+	WildcardDomain = "*"
+	// DefaultDomain to use if none was provided in options
+	DefaultDomain = "micro"
+)
+
 // The registry provides an interface for service discovery
 // and an abstraction over varying implementations
 // {consul, etcd, zookeeper, ...}
@@ -54,18 +61,6 @@ type Value struct {
 	Type   string   `json:"type"`
 	Values []*Value `json:"values"`
 }
-
-type Option func(*Options)
-
-type RegisterOption func(*RegisterOptions)
-
-type WatchOption func(*WatchOptions)
-
-type DeregisterOption func(*DeregisterOptions)
-
-type GetOption func(*GetOptions)
-
-type ListOption func(*ListOptions)
 
 // Register a service node. Additionally supply options such as TTL.
 func Register(s *Service, opts ...RegisterOption) error {

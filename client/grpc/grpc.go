@@ -11,14 +11,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/micro/go-micro/v2/broker"
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/client/selector"
-	raw "github.com/micro/go-micro/v2/codec/bytes"
-	"github.com/micro/go-micro/v2/errors"
-	"github.com/micro/go-micro/v2/metadata"
-	"github.com/micro/go-micro/v2/registry"
-	pnet "github.com/micro/go-micro/v2/util/net"
+	"github.com/itzmanish/go-micro/v2/broker"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/client/selector"
+	raw "github.com/itzmanish/go-micro/v2/codec/bytes"
+	"github.com/itzmanish/go-micro/v2/errors"
+	"github.com/itzmanish/go-micro/v2/metadata"
+	"github.com/itzmanish/go-micro/v2/registry"
+	pnet "github.com/itzmanish/go-micro/v2/util/net"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -285,7 +285,7 @@ func (g *grpcClient) stream(ctx context.Context, node *registry.Node, req client
 			}
 
 			// defer execution of release
-			cc.Close()
+			// cc.Close()
 		},
 	}
 

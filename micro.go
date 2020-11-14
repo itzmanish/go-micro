@@ -4,8 +4,8 @@ package micro
 import (
 	"context"
 
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/server"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/server"
 )
 
 type serviceKey struct{}
@@ -68,7 +68,7 @@ type Event interface {
 	Publish(ctx context.Context, msg interface{}, opts ...client.PublishOption) error
 }
 
-// Type alias to satisfy the deprecation
+// Publisher Type alias to satisfy the deprecation
 type Publisher = Event
 
 type Option func(*Options)

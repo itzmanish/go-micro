@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/micro/go-micro/v2/codec"
-	"github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/registry"
-	signalutil "github.com/micro/go-micro/v2/util/signal"
+	"github.com/itzmanish/go-micro/v2/codec"
+	"github.com/itzmanish/go-micro/v2/logger"
+	"github.com/itzmanish/go-micro/v2/registry"
+	signalutil "github.com/itzmanish/go-micro/v2/util/signal"
 )
 
 // Server is a simple micro server abstraction

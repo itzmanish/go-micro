@@ -44,6 +44,18 @@ type ListOptions struct {
 	Context context.Context
 }
 
+type Option func(*Options)
+
+type RegisterOption func(*RegisterOptions)
+
+type WatchOption func(*WatchOptions)
+
+type DeregisterOption func(*DeregisterOptions)
+
+type GetOption func(*GetOptions)
+
+type ListOption func(*ListOptions)
+
 // Addrs is the registry addresses to use
 func Addrs(addrs ...string) Option {
 	return func(o *Options) {

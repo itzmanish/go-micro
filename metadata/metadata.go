@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-type metadataKey struct{}
-
 // Metadata is our way of representing request headers internally.
 // They're used at the RPC level and translate back and forth
 // from Transport headers.
@@ -80,27 +78,6 @@ func Get(ctx context.Context, key string) (string, bool) {
 	val, ok = md[strings.Title(key)]
 
 	return val, ok
-}
-
-// FromContext returns metadata from the given context
-func FromContext(ctx context.Context) (Metadata, bool) {
-	md, ok := ctx.Value(metadataKey{}).(Metadata)
-	if !ok {
-		return nil, ok
-	}
-
-	// capitalise all values
-	newMD := make(Metadata, len(md))
-	for k, v := range md {
-		newMD[strings.Title(k)] = v
-	}
-
-	return newMD, ok
-}
-
-// NewContext creates a new context with the given metadata
-func NewContext(ctx context.Context, md Metadata) context.Context {
-	return context.WithValue(ctx, metadataKey{}, md)
 }
 
 // MergeContext merges metadata to existing metadata, overwriting if specified

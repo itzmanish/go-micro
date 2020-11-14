@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/micro/go-micro/v2/api/resolver"
+	"github.com/itzmanish/go-micro/v2/api/resolver"
 )
 
 func NewResolver(opts ...resolver.Option) resolver.Resolver {
@@ -22,7 +22,9 @@ var (
 	re = regexp.MustCompile("^v[0-9]+$")
 )
 
-func (r *Resolver) Resolve(req *http.Request) (*resolver.Endpoint, error) {
+func (r *Resolver) Resolve(req *http.Request, opts ...resolver.ResolveOption) (*resolver.Endpoint, error) {
+	// parse options
+	options := resolver.NewResolveOptions(opts...)
 	if req.URL.Path == "/" {
 		return nil, errors.New("unknown name")
 	}
@@ -34,6 +36,7 @@ func (r *Resolver) Resolve(req *http.Request) (*resolver.Endpoint, error) {
 			Host:   req.Host,
 			Method: req.Method,
 			Path:   req.URL.Path,
+			Domain: options.Domain,
 		}, nil
 	}
 
@@ -44,6 +47,7 @@ func (r *Resolver) Resolve(req *http.Request) (*resolver.Endpoint, error) {
 			Host:   req.Host,
 			Method: req.Method,
 			Path:   req.URL.Path,
+			Domain: options.Domain,
 		}, nil
 	}
 
@@ -52,6 +56,7 @@ func (r *Resolver) Resolve(req *http.Request) (*resolver.Endpoint, error) {
 		Host:   req.Host,
 		Method: req.Method,
 		Path:   req.URL.Path,
+		Domain: options.Domain,
 	}, nil
 }
 

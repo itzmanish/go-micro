@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/itzmanish/go-micro/v2/agent/input"
 	"github.com/micro/cli/v2"
-	"github.com/micro/go-micro/v2/agent/input"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 )
 

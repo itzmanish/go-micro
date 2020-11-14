@@ -4,17 +4,19 @@ import (
 	"context"
 	"time"
 
-	"github.com/micro/go-micro/v2/broker"
-	"github.com/micro/go-micro/v2/client/selector"
-	"github.com/micro/go-micro/v2/codec"
-	"github.com/micro/go-micro/v2/registry"
-	"github.com/micro/go-micro/v2/transport"
+	"github.com/itzmanish/go-micro/v2/broker"
+	"github.com/itzmanish/go-micro/v2/client/selector"
+	"github.com/itzmanish/go-micro/v2/codec"
+	"github.com/itzmanish/go-micro/v2/registry"
+	"github.com/itzmanish/go-micro/v2/transport"
 )
 
 type Options struct {
 	// Used to select codec
 	ContentType string
 
+	// Proxy address to send requests via
+	Proxy string
 	// Plugged interfaces
 	Broker    broker.Broker
 	Codecs    map[string]codec.NewCodec

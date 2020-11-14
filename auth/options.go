@@ -4,9 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/micro/go-micro/v2/auth/provider"
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/store"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/store"
 )
 
 func NewOptions(opts ...Option) Options {
@@ -14,28 +13,22 @@ func NewOptions(opts ...Option) Options {
 	for _, o := range opts {
 		o(&options)
 	}
-	if options.Client == nil {
-		options.Client = client.DefaultClient
-	}
-
 	return options
 }
 
 type Options struct {
-	// Namespace the service belongs to
-	Namespace string
+	// Issuer of the service's account
+	Issuer string
 	// ID is the services auth ID
 	ID string
 	// Secret is used to authenticate the service
 	Secret string
 	// Token is the services token used to authenticate itself
-	Token *Token
+	Token *AuthToken
 	// PublicKey for decoding JWTs
 	PublicKey string
 	// PrivateKey for encoding JWTs
 	PrivateKey string
-	// Provider is an auth provider
-	Provider provider.Provider
 	// LoginURL is the relative url path where a user can login
 	LoginURL string
 	// Store to back auth
@@ -44,6 +37,8 @@ type Options struct {
 	Client client.Client
 	// Addrs sets the addresses of auth
 	Addrs []string
+	// Context to store other options
+	Context context.Context
 }
 
 type Option func(o *Options)
@@ -55,10 +50,10 @@ func Addrs(addrs ...string) Option {
 	}
 }
 
-// Namespace the service belongs to
-func Namespace(n string) Option {
+// Issuer of the services account
+func Issuer(i string) Option {
 	return func(o *Options) {
-		o.Namespace = n
+		o.Issuer = i
 	}
 }
 
@@ -92,16 +87,9 @@ func Credentials(id, secret string) Option {
 }
 
 // ClientToken sets the auth token to use when making requests
-func ClientToken(token *Token) Option {
+func ClientToken(token *AuthToken) Option {
 	return func(o *Options) {
 		o.Token = token
-	}
-}
-
-// Provider set the auth provider
-func Provider(p provider.Provider) Option {
-	return func(o *Options) {
-		o.Provider = p
 	}
 }
 
@@ -112,8 +100,7 @@ func LoginURL(url string) Option {
 	}
 }
 
-// WithClient sets the client to use when making requests
-func WithClient(c client.Client) Option {
+func Client(c client.Client) Option {
 	return func(o *Options) {
 		o.Client = c
 	}
@@ -130,6 +117,10 @@ type GenerateOptions struct {
 	Type string
 	// Secret used to authenticate the account
 	Secret string
+	// Issuer of the account, e.g. micro
+	Issuer string
+	// Name of the acouunt e.g. an email or username
+	Name string
 }
 
 type GenerateOption func(o *GenerateOptions)
@@ -169,6 +160,20 @@ func WithScopes(s ...string) GenerateOption {
 	}
 }
 
+// WithIssuer for the generated account
+func WithIssuer(i string) GenerateOption {
+	return func(o *GenerateOptions) {
+		o.Issuer = i
+	}
+}
+
+// WithName for the generated account
+func WithName(n string) GenerateOption {
+	return func(o *GenerateOptions) {
+		o.Name = n
+	}
+}
+
 // NewGenerateOptions from a slice of options
 func NewGenerateOptions(opts ...GenerateOption) GenerateOptions {
 	var options GenerateOptions
@@ -187,6 +192,8 @@ type TokenOptions struct {
 	RefreshToken string
 	// Expiry is the time the token should live for
 	Expiry time.Duration
+	// Issuer of the account
+	Issuer string
 }
 
 type TokenOption func(o *TokenOptions)
@@ -211,6 +218,12 @@ func WithToken(rt string) TokenOption {
 	}
 }
 
+func WithTokenIssuer(iss string) TokenOption {
+	return func(o *TokenOptions) {
+		o.Issuer = iss
+	}
+}
+
 // NewTokenOptions from a slice of options
 func NewTokenOptions(opts ...TokenOption) TokenOptions {
 	var options TokenOptions
@@ -227,7 +240,8 @@ func NewTokenOptions(opts ...TokenOption) TokenOptions {
 }
 
 type VerifyOptions struct {
-	Context context.Context
+	Context   context.Context
+	Namespace string
 }
 
 type VerifyOption func(o *VerifyOptions)
@@ -237,9 +251,15 @@ func VerifyContext(ctx context.Context) VerifyOption {
 		o.Context = ctx
 	}
 }
+func VerifyNamespace(ns string) VerifyOption {
+	return func(o *VerifyOptions) {
+		o.Namespace = ns
+	}
+}
 
 type RulesOptions struct {
-	Context context.Context
+	Context   context.Context
+	Namespace string
 }
 
 type RulesOption func(o *RulesOptions)
@@ -247,5 +267,11 @@ type RulesOption func(o *RulesOptions)
 func RulesContext(ctx context.Context) RulesOption {
 	return func(o *RulesOptions) {
 		o.Context = ctx
+	}
+}
+
+func RulesNamespace(ns string) RulesOption {
+	return func(o *RulesOptions) {
+		o.Namespace = ns
 	}
 }

@@ -11,7 +11,7 @@ import (
 
 	client "github.com/coreos/etcd/clientv3"
 	cc "github.com/coreos/etcd/clientv3/concurrency"
-	"github.com/micro/go-micro/v2/sync"
+	"github.com/itzmanish/go-micro/v2/sync"
 )
 
 type etcdSync struct {
@@ -42,7 +42,7 @@ func (e *etcdSync) Leader(id string, opts ...sync.LeaderOption) (sync.Leader, er
 	}
 
 	// make path
-	path := path.Join(e.path, strings.Replace(e.options.Prefix+id, "/", "-", -1))
+	path := path.Join(e.path, strings.ReplaceAll(e.options.Prefix+id, "/", "-"))
 
 	s, err := cc.NewSession(e.client)
 	if err != nil {
@@ -101,7 +101,7 @@ func (e *etcdSync) Lock(id string, opts ...sync.LockOption) error {
 	}
 
 	// make path
-	path := path.Join(e.path, strings.Replace(e.options.Prefix+id, "/", "-", -1))
+	path := path.Join(e.path, strings.ReplaceAll(e.options.Prefix+id, "/", "-"))
 
 	var sopts []cc.SessionOption
 	if options.TTL > 0 {

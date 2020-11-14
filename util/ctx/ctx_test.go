@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/micro/go-micro/v2/metadata"
+	"github.com/itzmanish/go-micro/v2/metadata"
 )
 
 func TestRequestToContext(t *testing.T) {

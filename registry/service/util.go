@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/micro/go-micro/v2/registry"
-	pb "github.com/micro/go-micro/v2/registry/service/proto"
+	"github.com/itzmanish/go-micro/v2/registry"
+	pb "github.com/itzmanish/go-micro/v2/registry/service/proto"
 )
 
 func values(v []*registry.Value) []*pb.Value {

@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/micro/go-micro/v2/auth"
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/errors"
-	"github.com/micro/go-micro/v2/metadata"
-	"github.com/micro/go-micro/v2/server"
+	"github.com/itzmanish/go-micro/v2/auth"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/errors"
+	"github.com/itzmanish/go-micro/v2/metadata"
+	"github.com/itzmanish/go-micro/v2/server"
 )
 
 func TestWrapper(t *testing.T) {
@@ -79,7 +79,7 @@ func (a *testAuth) Inspect(token string) (*auth.Account, error) {
 }
 
 func (a *testAuth) Options() auth.Options {
-	return auth.Options{Namespace: a.namespace}
+	return auth.Options{Issuer: a.namespace}
 }
 
 type testRequest struct {

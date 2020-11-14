@@ -8,22 +8,23 @@ import (
 	"net/textproto"
 	"strconv"
 	"strings"
+	"time"
 
 	jsonpatch "github.com/evanphx/json-patch/v5"
-	"github.com/micro/go-micro/v2/api"
-	"github.com/micro/go-micro/v2/api/handler"
-	"github.com/micro/go-micro/v2/api/internal/proto"
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/client/selector"
-	"github.com/micro/go-micro/v2/codec"
-	"github.com/micro/go-micro/v2/codec/jsonrpc"
-	"github.com/micro/go-micro/v2/codec/protorpc"
-	"github.com/micro/go-micro/v2/errors"
-	"github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/metadata"
-	"github.com/micro/go-micro/v2/registry"
-	"github.com/micro/go-micro/v2/util/ctx"
-	"github.com/micro/go-micro/v2/util/qson"
+	"github.com/itzmanish/go-micro/v2/api"
+	"github.com/itzmanish/go-micro/v2/api/handler"
+	"github.com/itzmanish/go-micro/v2/api/internal/proto"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/client/selector"
+	"github.com/itzmanish/go-micro/v2/codec"
+	"github.com/itzmanish/go-micro/v2/codec/jsonrpc"
+	"github.com/itzmanish/go-micro/v2/codec/protorpc"
+	"github.com/itzmanish/go-micro/v2/errors"
+	"github.com/itzmanish/go-micro/v2/logger"
+	"github.com/itzmanish/go-micro/v2/metadata"
+	"github.com/itzmanish/go-micro/v2/registry"
+	"github.com/itzmanish/go-micro/v2/util/ctx"
+	"github.com/itzmanish/go-micro/v2/util/qson"
 	"github.com/oxtoacart/bpool"
 )
 
@@ -141,9 +142,18 @@ func (h *rpcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var callOpts []client.CallOption
+
 	// create strategy
 	so := selector.WithStrategy(strategy(service.Services))
-
+	callOpts = append(callOpts, client.WithSelectOption(so))
+	if t := r.Header.Get("Timeout"); t != "" {
+		// assume timeout integer seconds now
+		// assume timeout in format 10s
+		if td, err := time.ParseDuration(t); err == nil {
+			callOpts = append(callOpts, client.WithRequestTimeout(td))
+		}
+	}
 	// walk the standard call path
 	// get payload
 	br, err := requestPayload(r)
@@ -174,7 +184,7 @@ func (h *rpcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		)
 
 		// make the call
-		if err := c.Call(cx, req, response, client.WithSelectOption(so)); err != nil {
+		if err := c.Call(cx, req, response, callOpts...); err != nil {
 			writeError(w, r, err)
 			return
 		}
@@ -209,7 +219,7 @@ func (h *rpcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			client.WithContentType(ct),
 		)
 		// make the call
-		if err := c.Call(cx, req, &response, client.WithSelectOption(so)); err != nil {
+		if err := c.Call(cx, req, &response, callOpts...); err != nil {
 			writeError(w, r, err)
 			return
 		}
@@ -480,7 +490,11 @@ func writeError(w http.ResponseWriter, r *http.Request, err error) {
 }
 
 func writeResponse(w http.ResponseWriter, r *http.Request, rsp []byte) {
-	w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
+	ct := r.Header.Get("Content-Type")
+	if ct == "" {
+		ct = "application/json"
+	}
+	w.Header().Set("Content-Type", ct)
 	w.Header().Set("Content-Length", strconv.Itoa(len(rsp)))
 
 	// Set trailers

@@ -7,15 +7,6 @@ import (
 	"time"
 )
 
-const (
-	// BearerScheme used for Authorization header
-	BearerScheme = "Bearer "
-	// ScopePublic is the scope applied to a rule to allow access to the public
-	ScopePublic = ""
-	// ScopeAccount is the scope applied to a rule to limit to users with any valid account
-	ScopeAccount = "*"
-)
-
 var (
 	// ErrInvalidToken is when the token provided is not valid
 	ErrInvalidToken = errors.New("invalid token provided")
@@ -23,33 +14,20 @@ var (
 	ErrForbidden = errors.New("resource forbidden")
 )
 
-// Auth provides authentication and authorization
-type Auth interface {
-	// Init the auth
-	Init(opts ...Option)
-	// Options set for auth
-	Options() Options
-	// Generate a new account
-	Generate(id string, opts ...GenerateOption) (*Account, error)
-	// Verify an account has access to a resource using the rules
-	Verify(acc *Account, res *Resource, opts ...VerifyOption) error
-	// Inspect a token
-	Inspect(token string) (*Account, error)
-	// Token generated using refresh token or credentials
-	Token(opts ...TokenOption) (*Token, error)
-	// Grant access to a resource
-	Grant(rule *Rule) error
-	// Revoke access to a resource
-	Revoke(rule *Rule) error
-	// Rules returns all the rules used to verify requests
-	Rules(...RulesOption) ([]*Rule, error)
-	// String returns the name of the implementation
-	String() string
-}
+const (
+	// BearerScheme used for Authorization header
+	BearerScheme = "Bearer "
+	// TokenCookieName is the name of the cookie which stores the auth token
+	TokenCookieName = "micro-token"
+	// ScopePublic is the scope applied to a rule to allow access to the public
+	ScopePublic = ""
+	// ScopeAccount is the scope applied to a rule to limit to users with any valid account
+	ScopeAccount = "*"
+)
 
 // Account provided by an auth provider
 type Account struct {
-	// ID of the account e.g. email
+	// ID of the account e.g. UUID. Should not change
 	ID string `json:"id"`
 	// Type of the account, e.g. service
 	Type string `json:"type"`
@@ -61,10 +39,12 @@ type Account struct {
 	Scopes []string `json:"scopes"`
 	// Secret for the account, e.g. the password
 	Secret string `json:"secret"`
+	// Name of the account. User friendly name that might change e.g. a username or email
+	Name string `json:"name"`
 }
 
-// Token can be short or long lived
-type Token struct {
+// AuthTokne can be short or long lived
+type AuthToken struct {
 	// The token to be used for accessing resources
 	AccessToken string `json:"access_token"`
 	// RefreshToken to be used to generate a new token
@@ -76,7 +56,7 @@ type Token struct {
 }
 
 // Expired returns a boolean indicating if the token needs to be refreshed
-func (t *Token) Expired() bool {
+func (t *AuthToken) Expired() bool {
 	return t.Expiry.Unix() < time.Now().Unix()
 }
 
@@ -114,6 +94,65 @@ type Rule struct {
 	// Priority the rule should take when verifying a request, the higher the value the sooner the
 	// rule will be applied
 	Priority int32
+}
+
+// Auth provides authentication and authorization
+type Auth interface {
+	// Init the auth
+	Init(opts ...Option)
+	// Options set for auth
+	Options() Options
+	// Generate a new account
+	Generate(id string, opts ...GenerateOption) (*Account, error)
+	// Verify an account has access to a resource using the rules
+	Verify(acc *Account, res *Resource, opts ...VerifyOption) error
+	// Inspect a token
+	Inspect(token string) (*Account, error)
+	// Token generated using refresh token or credentials
+	Token(opts ...TokenOption) (*AuthToken, error)
+	// Grant access to a resource
+	Grant(rule *Rule) error
+	// Revoke access to a resource
+	Revoke(rule *Rule) error
+	// Rules returns all the rules used to verify requests
+	Rules(...RulesOption) ([]*Rule, error)
+	// String returns the name of the implementation
+	String() string
+}
+
+// Generate a new account
+func Generate(id string, opts ...GenerateOption) (*Account, error) {
+	return DefaultAuth.Generate(id, opts...)
+}
+
+// Verify an account has access to a resource using the rules
+func Verify(acc *Account, res *Resource, opts ...VerifyOption) error {
+	return DefaultAuth.Verify(acc, res, opts...)
+}
+
+// Inspect a token
+func Inspect(token string) (*Account, error) {
+	return DefaultAuth.Inspect(token)
+}
+
+// Token generated using refresh token or credentials
+func Token(opts ...TokenOption) (*AuthToken, error) {
+	return DefaultAuth.Token(opts...)
+}
+
+// Grant access to a resource
+func Grant(rule *Rule) error {
+	return DefaultAuth.Grant(rule)
+}
+
+// Revoke access to a resource
+func Revoke(rule *Rule) error {
+	return DefaultAuth.Revoke(rule)
+}
+
+// Rules returns all the rules used to verify requests
+func Rules(...RulesOption) ([]*Rule, error) {
+	return DefaultAuth.Rules()
 }
 
 type accountKey struct{}

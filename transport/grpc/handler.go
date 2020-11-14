@@ -3,10 +3,10 @@ package grpc
 import (
 	"runtime/debug"
 
-	"github.com/micro/go-micro/v2/errors"
-	"github.com/micro/go-micro/v2/logger"
-	"github.com/micro/go-micro/v2/transport"
-	pb "github.com/micro/go-micro/v2/transport/grpc/proto"
+	"github.com/itzmanish/go-micro/v2/errors"
+	"github.com/itzmanish/go-micro/v2/logger"
+	"github.com/itzmanish/go-micro/v2/transport"
+	pb "github.com/itzmanish/go-micro/v2/transport/grpc/proto"
 	"google.golang.org/grpc/peer"
 )
 

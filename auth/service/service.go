@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/micro/go-micro/v2/auth"
-	"github.com/micro/go-micro/v2/auth/rules"
-	pb "github.com/micro/go-micro/v2/auth/service/proto"
-	"github.com/micro/go-micro/v2/auth/token"
-	"github.com/micro/go-micro/v2/auth/token/jwt"
-	"github.com/micro/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/auth"
+	"github.com/itzmanish/go-micro/v2/auth/rules"
+	pb "github.com/itzmanish/go-micro/v2/auth/service/proto"
+	"github.com/itzmanish/go-micro/v2/auth/token"
+	"github.com/itzmanish/go-micro/v2/auth/token/jwt"
+	"github.com/itzmanish/go-micro/v2/client"
 )
 
 // svc is the service implementation of the Auth interface
@@ -137,7 +137,7 @@ func (s *svc) Verify(acc *auth.Account, res *auth.Resource, opts ...auth.VerifyO
 		return err
 	}
 
-	return rules.Verify(rs, acc, res)
+	return rules.VerifyAccess(rs, acc, res)
 }
 
 // Inspect a token
@@ -157,7 +157,7 @@ func (s *svc) Inspect(token string) (*auth.Account, error) {
 }
 
 // Token generation using an account ID and secret
-func (s *svc) Token(opts ...auth.TokenOption) (*auth.Token, error) {
+func (s *svc) Token(opts ...auth.TokenOption) (*auth.AuthToken, error) {
 	options := auth.NewTokenOptions(opts...)
 
 	rsp, err := s.auth.Token(context.Background(), &pb.TokenRequest{
@@ -173,8 +173,8 @@ func (s *svc) Token(opts ...auth.TokenOption) (*auth.Token, error) {
 	return serializeToken(rsp.Token), nil
 }
 
-func serializeToken(t *pb.Token) *auth.Token {
-	return &auth.Token{
+func serializeToken(t *pb.Token) *auth.AuthToken {
+	return &auth.AuthToken{
 		AccessToken:  t.AccessToken,
 		RefreshToken: t.RefreshToken,
 		Created:      time.Unix(t.Created, 0),

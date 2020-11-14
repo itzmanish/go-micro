@@ -3,7 +3,7 @@ package rules
 import (
 	"testing"
 
-	"github.com/micro/go-micro/v2/auth"
+	"github.com/itzmanish/go-micro/v2/auth"
 )
 
 func TestVerify(t *testing.T) {
@@ -282,7 +282,7 @@ func TestVerify(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.Name, func(t *testing.T) {
-			if err := Verify(tc.Rules, tc.Account, tc.Resource); err != tc.Error {
+			if err := VerifyAccess(tc.Rules, tc.Account, tc.Resource); err != tc.Error {
 				t.Errorf("Expected %v but got %v", tc.Error, err)
 			}
 		})

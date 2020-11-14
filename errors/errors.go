@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-//go:generate protoc -I. --go_out=paths=source_relative:. errors.proto
+//go:generate protoc -I. --go_out=paths=source_relative:. proto/errors.proto
 
 func (e *Error) Error() string {
 	b, _ := json.Marshal(e)
@@ -113,6 +113,46 @@ func InternalServerError(id, format string, a ...interface{}) error {
 		Code:   500,
 		Detail: fmt.Sprintf(format, a...),
 		Status: http.StatusText(500),
+	}
+}
+
+// NotImplemented generates a 501 error
+func NotImplemented(id, format string, a ...interface{}) error {
+	return &Error{
+		Id:     id,
+		Code:   501,
+		Detail: fmt.Sprintf(format, a...),
+		Status: http.StatusText(501),
+	}
+}
+
+// BadGateway generates a 502 error
+func BadGateway(id, format string, a ...interface{}) error {
+	return &Error{
+		Id:     id,
+		Code:   502,
+		Detail: fmt.Sprintf(format, a...),
+		Status: http.StatusText(502),
+	}
+}
+
+// ServiceUnavailable generates a 503 error
+func ServiceUnavailable(id, format string, a ...interface{}) error {
+	return &Error{
+		Id:     id,
+		Code:   503,
+		Detail: fmt.Sprintf(format, a...),
+		Status: http.StatusText(503),
+	}
+}
+
+// GatewayTimeout generates a 504 error
+func GatewayTimeout(id, format string, a ...interface{}) error {
+	return &Error{
+		Id:     id,
+		Code:   504,
+		Detail: fmt.Sprintf(format, a...),
+		Status: http.StatusText(504),
 	}
 }
 

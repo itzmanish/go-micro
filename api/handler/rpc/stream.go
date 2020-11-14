@@ -12,11 +12,11 @@ import (
 	"github.com/gobwas/httphead"
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
-	"github.com/micro/go-micro/v2/api"
-	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/client/selector"
-	raw "github.com/micro/go-micro/v2/codec/bytes"
-	"github.com/micro/go-micro/v2/logger"
+	"github.com/itzmanish/go-micro/v2/api"
+	"github.com/itzmanish/go-micro/v2/client"
+	"github.com/itzmanish/go-micro/v2/client/selector"
+	raw "github.com/itzmanish/go-micro/v2/codec/bytes"
+	"github.com/itzmanish/go-micro/v2/logger"
 )
 
 // serveWebsocket will stream rpc back over websockets assuming json
@@ -90,7 +90,7 @@ func serveWebsocket(ctx context.Context, w http.ResponseWriter, r *http.Request,
 	var request interface{}
 	if !bytes.Equal(payload, []byte(`{}`)) {
 		switch ct {
-		case "application/json", "":
+		case "application/json":
 			m := json.RawMessage(payload)
 			request = &m
 		default:

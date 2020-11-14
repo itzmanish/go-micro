@@ -1,0 +1,14 @@
+language: go
+go:
+- 1.15.x
+env:
+  - GO111MODULE=on IN_TRAVIS_CI=yes
+before_script:
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+script:
+  #  - golangci-lint run || true
+    #  - go test -v -race ./... || true
+  - go test -v ./...
+cache:
+  directories:
+    - $GOPATH/pkg/mod
