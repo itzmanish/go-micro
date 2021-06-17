@@ -3,7 +3,8 @@ This fork will follow the same plugable architecture which was it's core feature
 
 Also I haven't thought about name. File/Folder structure is same as before.
 
-# Go Micro [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/itzmanish/go-micro/v2?tab=doc) [![Build Status](https://www.travis-ci.com/itzmanish/go-micro.svg?branch=master)](https://www.travis-ci.com/itzmanish/go-micro) [![Go Report Card](https://goreportcard.com/badge/github.com/itzmanish/go-micro)](https://goreportcard.com/report/github.com/itzmanish/go-micro)
+# Go Micro
+[![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/itzmanish/go-micro/v2?tab=doc) [![Build Status](https://www.travis-ci.com/itzmanish/go-micro.svg?branch=master)](https://www.travis-ci.com/itzmanish/go-micro) [![Go Report Card](https://goreportcard.com/badge/github.com/itzmanish/go-micro)](https://goreportcard.com/report/github.com/itzmanish/go-micro)
 Go Micro is a framework for distributed systems development.
 
 ## Overview
