@@ -640,8 +640,8 @@ func (r *router) Stop() error {
 		r.sub.Unlock()
 	}
 
-	// just close event chan
-	close(r.eventChan)
+	// set event chan nil
+	r.eventChan = nil
 	return nil
 }
 
