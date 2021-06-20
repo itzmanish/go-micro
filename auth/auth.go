@@ -43,7 +43,7 @@ type Account struct {
 	Name string `json:"name"`
 }
 
-// AuthTokne can be short or long lived
+// AuthToken can be short or long lived
 type AuthToken struct {
 	// The token to be used for accessing resources
 	AccessToken string `json:"access_token"`
