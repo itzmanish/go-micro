@@ -741,6 +741,18 @@ func (c *cmd) Before(ctx *cli.Context) error {
 		}
 	}
 
+	// Set the config
+	if name := ctx.String("config"); len(name) > 0 && name != "service" {
+		cc, ok := c.opts.Configs[name]
+		if !ok {
+			return fmt.Errorf("Config %s not found", name)
+		}
+
+		if conf, err := cc(); err == nil {
+			*c.opts.Config = conf
+		}
+	}
+
 	if ctx.String("config") == "service" {
 		opt := config.WithSource(configSrv.NewSource(configSrc.WithClient(microClient)))
 		if err := (*c.opts.Config).Init(opt); err != nil {
