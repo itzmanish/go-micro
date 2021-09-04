@@ -37,13 +37,6 @@ func apiRoute(p string) (string, string) {
 		name := strings.Join(parts[:len(parts)-1], ".")
 		return name, methodName(parts[len(parts)-2:])
 	}
-	// Treat /v[0-9]+ as versioning where we have 3 parts
-	// /v1/foo/bar => service: v1.foo method: Foo.bar
-	// check if it has one more part as identifier associated with request
-	if len(parts) == 4 && versionRe.Match([]byte(parts[0])) {
-		name := strings.Join(parts[:len(parts)-2], ".")
-		return name, methodName(parts[len(parts)-2:])
-	}
 
 	// Service is everything minus last two parts
 	// Method is the last two parts
