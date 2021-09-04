@@ -184,6 +184,10 @@ func AuthHandler(fn func() auth.Auth) server.HandlerWrapper {
 			// get the auth.Auth interface
 			a := fn()
 
+			if a.String() == "noop" {
+				return h(ctx, req, rsp)
+			}
+
 			// Check for debug endpoints which should be excluded from auth
 			if strings.HasPrefix(req.Endpoint(), "Debug.") {
 				return h(ctx, req, rsp)
