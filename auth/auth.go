@@ -17,6 +17,8 @@ var (
 const (
 	// BearerScheme used for Authorization header
 	BearerScheme = "Bearer "
+	// APIKeyScheme used for Authorization header
+	APIKeyScheme = "APIKEY "
 	// TokenCookieName is the name of the cookie which stores the auth token
 	TokenCookieName = "micro-token"
 	// ScopePublic is the scope applied to a rule to allow access to the public
