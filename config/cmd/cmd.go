@@ -38,6 +38,7 @@ import (
 	"github.com/micro/cli/v2"
 
 	sgrpc "github.com/itzmanish/go-micro/v2/server/grpc"
+	shttp "github.com/itzmanish/go-micro/v2/server/http"
 	smucp "github.com/itzmanish/go-micro/v2/server/mucp"
 
 	// brokers
@@ -356,6 +357,7 @@ var (
 	DefaultServers = map[string]func(...server.Option) server.Server{
 		"mucp": smucp.NewServer,
 		"grpc": sgrpc.NewServer,
+		"http": shttp.NewServer,
 	}
 
 	DefaultTransports = map[string]func(...transport.Option) transport.Transport{
