@@ -17,6 +17,10 @@ type Options struct {
 	Database string
 	// Table is analagous to a table in database backends or a key prefix in KV backends
 	Table string
+	// Username for authentication
+	Username string
+	// Password for authentication
+	Password string
 	// Context should contain all implementation specific options, using context.WithValue.
 	Context context.Context
 	// Client to use for RPC
@@ -46,6 +50,20 @@ func Database(db string) Option {
 func Table(t string) Option {
 	return func(o *Options) {
 		o.Table = t
+	}
+}
+
+// Password is used for authentication with database endpoint
+func Password(pass string) Option {
+	return func(o *Options) {
+		o.Password = pass
+	}
+}
+
+// Username is used for authentication with database
+func Username(user string) Option {
+	return func(o *Options) {
+		o.Username = user
 	}
 }
 
